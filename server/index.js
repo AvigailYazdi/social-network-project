@@ -18,6 +18,7 @@ import {
   removeFriendController,
   sendFriendRequestController,
 } from "./controllers/friendController.js";
+import { createPostController, deletePostController, getFeedController, getPostByIdController, updatePostController } from "./controllers/postController.js";
 
 const app = express();
 
@@ -66,6 +67,18 @@ app.post(
 app.get("/api/friends", verifyToken, getFriendsController);
 
 app.delete("/api/friends/:userId", verifyToken, removeFriendController);
+
+//POSTS
+app.post("/api/posts", verifyToken, createPostController);
+
+app.get("/api/posts/feed", verifyToken, getFeedController);
+
+app.get("/api/posts/:id", verifyToken, getPostByIdController);
+
+app.delete("/api/posts/:id", verifyToken, deletePostController);
+
+app.patch("/api/posts/:id", verifyToken, updatePostController);
+
 
 //
 
