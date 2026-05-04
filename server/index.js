@@ -18,7 +18,19 @@ import {
   removeFriendController,
   sendFriendRequestController,
 } from "./controllers/friendController.js";
-import { createPostController, deletePostController, getFeedController, getPostByIdController, updatePostController } from "./controllers/postController.js";
+import {
+  createPostController,
+  deletePostController,
+  getFeedController,
+  getPostByIdController,
+  updatePostController,
+} from "./controllers/postController.js";
+import {
+  createCommentController,
+  deleteCommentController,
+  getCommentsByPostController,
+  updateCommentController,
+} from "./controllers/commentController.js";
 
 const app = express();
 
@@ -79,6 +91,18 @@ app.delete("/api/posts/:id", verifyToken, deletePostController);
 
 app.patch("/api/posts/:id", verifyToken, updatePostController);
 
+//COMMENTS
+app.post("/api/posts/:postId/comments", verifyToken, createCommentController);
+
+app.get(
+  "/api/posts/:postId/comments",
+  verifyToken,
+  getCommentsByPostController,
+);
+
+app.patch("/api/comments/:commentId", verifyToken, updateCommentController);
+
+app.delete("/api/comments/:commentId", verifyToken, deleteCommentController);
 
 //
 

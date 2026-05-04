@@ -108,9 +108,8 @@ export const getFeedService = async (userId, page = 1, limit = 10) => {
 
   const posts = await Post.find({
     $or: [
-      { visibility: "public" },
       {
-        visibility: "friends",
+        visibility: { $in: ["public", "friends"] },
         authorId: { $in: allowedUserIds },
       },
       {
