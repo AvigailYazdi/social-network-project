@@ -1,0 +1,20 @@
+services:
+  server:
+    build: ./server
+    container_name: social-network-server
+
+    ports:
+      - "3000:3000"
+
+    env_file:
+      - ./server/.env
+
+  client:
+    build: ./client
+    container_name: social-network-client
+
+    ports:
+      - "5173:5173"
+
+    depends_on:
+      - server

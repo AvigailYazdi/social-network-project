@@ -87,3 +87,15 @@ export const getPublicUserProfileService = async (userId) => {
     createdAt: user.createdAt,
   };
 };
+
+export const getAllPublicUsersService = async () => {
+  const users = await User.find().select("name bio avatarUrl createdAt");
+
+  return users.map((user) => ({
+    id: user._id,
+    name: user.name,
+    bio: user.bio,
+    avatarUrl: user.avatarUrl,
+    createdAt: user.createdAt,
+  }));
+};

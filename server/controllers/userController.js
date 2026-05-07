@@ -1,4 +1,5 @@
 import {
+  getAllPublicUsersService,
   getMeService,
   getPublicUserProfileService,
   loginUserService,
@@ -10,7 +11,14 @@ export const registerUserController = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     const result = await registerUserService({ name, email, password });
-    res.status(201).json(result);
+    const { user, token } = result;
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    res.status(201).json({ user });
   } catch (error) {
     res.status(400).json({
       message: error.message,
@@ -22,12 +30,24 @@ export const loginUserController = async (req, res) => {
   try {
     const { email, password } = req.body;
     const result = await loginUserService({ email, password });
-    res.status(200).json(result);
+    const { user, token } = result;
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({ user });
   } catch (error) {
     res.status(400).json({
       message: error.message,
     });
   }
+};
+
+export const logoutUserController = (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logged out successfully" });
 };
 
 export const getMeController = async (req, res) => {
@@ -58,6 +78,17 @@ export const getPublicUserProfileController = async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     res.status(404).json({
+      message: error.message,
+    });
+  }
+};
+
+export const getAllPublicUsersController = async (req, res) => {
+  try {
+    const users = await getAllPublicUsersService();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({
       message: error.message,
     });
   }

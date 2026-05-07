@@ -4,6 +4,7 @@ import {
   getCommentsByPostService,
   updateCommentService,
 } from "../services/commentService.js";
+import { getIO } from "../socket.js";
 
 export const createCommentController = async (req, res) => {
   try {
@@ -13,6 +14,8 @@ export const createCommentController = async (req, res) => {
       req.params.postId,
       content,
     );
+    const io = getIO();
+    io.emit("newComment", comment);
     res.status(201).json(comment);
   } catch (error) {
     res.status(400).json({ message: error.message });

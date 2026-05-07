@@ -3,10 +3,16 @@ import mongoose from "mongoose";
 import cors from "cors";
 import "dotenv/config";
 import { verifyToken } from "./middlewares/verifyToken.js";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import { setIO } from "./socket.js";
+import cookieParser from "cookie-parser";
 import {
+    getAllPublicUsersController,
   getMeController,
   getPublicUserProfileController,
   loginUserController,
+  logoutUserController,
   registerUserController,
   updateMeController,
 } from "./controllers/userController.js";
@@ -39,11 +45,16 @@ const mongoUri = process.env.MONGO_URI;
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 //USERS
 app.post("/api/users/register", registerUserController);
 
 app.post("/api/users/login", loginUserController);
+
+app.post("/api/users/logout", logoutUserController);
+
+app.get("/api/users", getAllPublicUsersController);
 
 app.get("/api/users/me", verifyToken, getMeController);
 
@@ -114,8 +125,18 @@ const startServer = async () => {
   try {
     await mongoose.connect(mongoUri);
     console.log("MongoDB connected");
-    app.listen(port, () => {
-      console.log(`Server running at http://localhost:${port}`);
+    const server = createServer(app);
+    const io = new Server(server, {
+      cors: {
+        origin: process.env.CLIENT_URL,
+      },
+    });
+    setIO(io);
+    io.on("connection", (socket) => {
+      console.log("User connected:", socket.id);
+    });
+    server.listen(port, () => {
+      console.log(`Server running on port ${port}`);
     });
   } catch (error) {
     console.error("MongoDB connection failed:", error.message);
