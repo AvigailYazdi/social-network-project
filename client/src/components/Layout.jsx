@@ -1,5 +1,6 @@
 import { Footer } from "./Footer";
 import { Navbar } from "./Navbar";
+import { AuthDialog } from "./AuthDialog";
 
 export const Layout = ({ children }) => {
   return (
@@ -7,6 +8,7 @@ export const Layout = ({ children }) => {
       <Navbar />
       <main className="main-content">{children}</main>
       <Footer />
+      <AuthDialog />
     </div>
   );
 };

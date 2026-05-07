@@ -11,9 +11,9 @@ export const Navbar = () => {
       <nav className="navbar-links">
         {isLoggedIn ? (
           <>
+            <span>Hello, {user?.name}!</span>
             <Link to="/feed">Feed</Link>
             <Link to="/profile">My Profile</Link>
-            <span>Hello {user?.name}</span>
             <button onClick={logout}>Logout</button>
           </>
         ) : (

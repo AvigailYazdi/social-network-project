@@ -1,3 +1,4 @@
+import { Avatar } from "@mui/material";
 import { useGetAllPublicUsers } from "../hooks/useGetAllPublicUsers";
 
 export const HomePage = () => {
@@ -22,7 +23,7 @@ export const HomePage = () => {
         {users.map((user) => (
           <div className="user-card" key={user.id}>
             <div className="user-avatar-wrapper">
-              <img
+              <Avatar
                 className="user-avatar"
                 src={user.avatarUrl}
                 alt={user.name}

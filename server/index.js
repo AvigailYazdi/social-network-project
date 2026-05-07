@@ -8,7 +8,7 @@ import { Server } from "socket.io";
 import { setIO } from "./socket.js";
 import cookieParser from "cookie-parser";
 import {
-    getAllPublicUsersController,
+  getAllPublicUsersController,
   getMeController,
   getPublicUserProfileController,
   loginUserController,
@@ -43,7 +43,12 @@ const app = express();
 const port = process.env.PORT || 4000;
 const mongoUri = process.env.MONGO_URI;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -129,6 +134,7 @@ const startServer = async () => {
     const io = new Server(server, {
       cors: {
         origin: process.env.CLIENT_URL,
+        credentials: true,
       },
     });
     setIO(io);

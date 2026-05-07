@@ -23,7 +23,7 @@ export const logoutUser = async () => {
   return data;
 };
 
-export const loginUser = async (email, password) => {
+export const loginUser = async ({ email, password }) => {
   const response = await fetch(`${API_URL}/login`, {
     method: "POST",
     headers: {
@@ -35,6 +35,22 @@ export const loginUser = async (email, password) => {
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.error || data.message || "Login failed");
+  }
+  return data;
+};
+
+export const registerUser = async ({ name, email, password }) => {
+  const response = await fetch(`${API_URL}/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({ name, email, password }),
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || data.message || "Register failed");
   }
   return data;
 };
